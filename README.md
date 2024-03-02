@@ -38,10 +38,10 @@ To run the app in development, follow these steps:
 
 2. In a separate terminal window, run the app on an iOS simulator:
    `
-   npm run run-ios
+   npm run ios
    `
 
 Or, to run the app on an Android emulator:
 `
-npm run run-android
+npm run android
 `
