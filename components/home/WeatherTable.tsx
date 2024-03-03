@@ -98,7 +98,7 @@ const WeatherTable = ({ location, isLoading }: WeatherTableProps) => {
             />
           </View>
           <Text style={styles.text}>
-            Precipitation: {currenthourData?.precipitation.value}%
+            Precipitation: {currenthourData?.precipitation.value} mm
           </Text>
         </View>
       )}

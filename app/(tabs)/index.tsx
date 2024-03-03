@@ -1,9 +1,4 @@
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  useColorScheme,
-} from "react-native";
+import { ScrollView, StyleSheet, useColorScheme } from "react-native";
 import { Text } from "@/components/Themed";
 import WeatherTable from "@/components/home/WeatherTable";
 import globalStyles from "@/constants/globalStyles";
@@ -14,6 +9,7 @@ import { useFetchLocationDetail } from "@/api/weather";
 import { Feather } from "@expo/vector-icons";
 import { Location } from "@/types/api";
 import { defaultLocation } from "@/constants/data";
+import Pressable from "@/components/Pressable";
 
 export default function HomeScreen() {
   const [openResultsModal, setOpenResultsModal] = useState(false);

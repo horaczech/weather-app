@@ -21,26 +21,32 @@ const SearchResults = ({
   onSelectLocation,
 }: SearchResultsProps) => {
   const theme = useColorScheme();
-  if (isLoading) return <ActivityIndicator />;
-  if (!data?._embedded?.location) return null;
 
   return (
     <View style={styles.container}>
-      {data?._embedded?.location.map((searchResult) => (
-        <Pressable
-          key={searchResult.id}
-          style={[
-            styles.searchItem,
-            {
-              borderBottomColor: theme === "light" ? "#9d9d9d" : "#ffffff",
-            },
-          ]}
-          onPress={() => onSelectLocation(searchResult)}
-        >
-          <Text style={styles.name}>{searchResult.name}</Text>
-          <Text style={styles.region}>{searchResult.region?.name}</Text>
-        </Pressable>
-      ))}
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : data?._embedded?.location ? (
+        data?._embedded?.location.map((searchResult, index, array) => (
+          <Pressable
+            key={searchResult.id}
+            style={[
+              styles.searchItem,
+              {
+                borderBottomColor: theme === "light" ? "#9d9d9d" : "#ffffff",
+                borderBottomWidth:
+                  index !== array.length - 1
+                    ? PixelRatio.roundToNearestPixel(2)
+                    : 0,
+              },
+            ]}
+            onPress={() => onSelectLocation(searchResult)}
+          >
+            <Text style={styles.name}>{searchResult.name}</Text>
+            <Text style={styles.region}>{searchResult.region?.name}</Text>
+          </Pressable>
+        ))
+      ) : null}
     </View>
   );
 };
@@ -56,7 +62,6 @@ const styles = StyleSheet.create({
   searchItem: {
     minHeight: 60,
     paddingHorizontal: "7.5%",
-    borderBottomWidth: PixelRatio.roundToNearestPixel(2),
     justifyContent: "center",
   },
   name: {
