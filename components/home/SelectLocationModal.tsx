@@ -8,7 +8,7 @@ import LocationSelector from "@/components/home/LocationSelector";
 import { useForm } from "react-hook-form";
 import { LocationForm } from "@/types/forms";
 import { useFetchSearchLocation } from "@/api/weather";
-import { StyleSheet, useColorScheme } from "react-native";
+import { Platform, StyleSheet, useColorScheme } from "react-native";
 import SearchResults from "@/components/home/SearchResults";
 import { debounce } from "@/utils/debounce";
 import { Location } from "@/types/api";
@@ -24,7 +24,7 @@ const SelectLocationModal = ({
   onClose,
   selectLocation,
 }: SelectLocationModalProps) => {
-  const snapPoints = useMemo(() => ["95%"], []);
+  const snapPoints = useMemo(() => ["50%", "95%"], []);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const theme = useColorScheme();
   const { control, watch, setValue } = useForm<LocationForm>();
@@ -85,6 +85,9 @@ const SelectLocationModal = ({
       handleIndicatorStyle={{
         backgroundColor: theme === "light" ? "#000000" : "#a4a4a4",
       }}
+      style={styles.bottomSheet}
+      keyboardBehavior="extend"
+      keyboardBlurBehavior="restore"
     >
       <BottomSheetView style={styles.container}>
         <LocationSelector control={control} inputValue={searchText} />
@@ -101,6 +104,9 @@ const SelectLocationModal = ({
 export default SelectLocationModal;
 
 const styles = StyleSheet.create({
+  bottomSheet: {
+    marginTop: Platform.OS === "ios" ? 20 : undefined,
+  },
   container: {
     flex: 1,
     alignItems: "center",

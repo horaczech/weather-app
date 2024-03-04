@@ -17,6 +17,7 @@ import {
   removeFavorite,
   setCurrentLocation,
 } from "@/features/favorite/favoriteSlice";
+import { blueColor } from "@/constants/Colors";
 
 export default function HomeScreen() {
   const [openResultsModal, setOpenResultsModal] = useState(false);
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 10,
     marginRight: 20,
-    backgroundColor: "#07126e",
+    backgroundColor: blueColor,
   },
   currentLocationText: {
     fontSize: 20,

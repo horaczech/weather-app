@@ -22,6 +22,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <Feather name="home" size={24} color={color} />
           ),
+          tabBarHideOnKeyboard: true,
         }}
       />
       <Tabs.Screen
