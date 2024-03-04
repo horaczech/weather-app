@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Tabs } from "expo-router";
 
 import Colors from "@/constants/Colors";
@@ -7,8 +7,6 @@ import { Feather } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
-  useEffect(() => {}, []);
 
   return (
     <Tabs

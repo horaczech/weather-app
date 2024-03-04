@@ -7,9 +7,10 @@ import { Ionicons } from "@expo/vector-icons";
 interface FavoriteItemProps {
   item: FavoriteLocation;
   onRemove: () => void;
+  onSelect: () => void;
 }
 
-const FavoriteItem = ({ item, onRemove }: FavoriteItemProps) => {
+const FavoriteItem = ({ item, onRemove, onSelect }: FavoriteItemProps) => {
   const theme = useColorScheme();
   return (
     <View
@@ -18,8 +19,10 @@ const FavoriteItem = ({ item, onRemove }: FavoriteItemProps) => {
         { borderColor: theme === "light" ? "#000000" : "#FFFFFF" },
       ]}
     >
-      <Text>{item.name}</Text>
-      <Pressable onPress={onRemove}>
+      <Pressable onPress={onSelect} style={styles.selectContainer}>
+        <Text>{item.name}</Text>
+      </Pressable>
+      <Pressable onPress={onRemove} style={styles.starContainer}>
         <Ionicons name="star" color="#c9600f" size={20} />
       </Pressable>
     </View>
@@ -32,11 +35,22 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
     borderWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingRight: 20,
     marginHorizontal: 20,
     marginBottom: 20,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+  },
+  selectContainer: {
+    height: "100%",
+    paddingLeft: 20,
+    marginRight: 10,
+    paddingVertical: 10,
+    flex: 1,
+  },
+  starContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

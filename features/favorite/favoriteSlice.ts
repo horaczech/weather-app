@@ -1,17 +1,22 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FavoriteLocation } from "@/types/asyncStorage";
 import {
   deleteFavoriteLocation,
   getFavoriteLocations,
   saveFavoriteLocation,
 } from "@/utils/asyncStorage";
+import { Location } from "@/types/api";
+import { defaultLocation } from "@/constants/data";
 
 export interface FavoriteState {
   favoriteLocations: FavoriteLocation[];
+  currentLocation: Pick<Location, "id" | "name">;
 }
 
 const initialState: FavoriteState = {
   favoriteLocations: [],
+  // defaults to London
+  currentLocation: defaultLocation,
 };
 
 export const initFavorite = createAsyncThunk(
@@ -40,7 +45,16 @@ export const addFavorite = createAsyncThunk(
 export const favoriteSlice = createSlice({
   name: "favorite",
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentLocation: (
+      state,
+      action: PayloadAction<FavoriteState["currentLocation"]>,
+    ) => {
+      if (action.payload) {
+        state.currentLocation = action.payload;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(initFavorite.fulfilled, (state, action) => {
@@ -69,5 +83,7 @@ export const favoriteSlice = createSlice({
       });
   },
 });
+
+export const { setCurrentLocation } = favoriteSlice.actions;
 
 export default favoriteSlice.reducer;

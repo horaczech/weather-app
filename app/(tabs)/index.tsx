@@ -7,8 +7,6 @@ import SelectLocationModal from "@/components/home/SelectLocationModal";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFetchLocationDetail } from "@/api/weather";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { Location } from "@/types/api";
-import { defaultLocation } from "@/constants/data";
 import Pressable from "@/components/Pressable";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +15,7 @@ import {
   addFavorite,
   initFavorite,
   removeFavorite,
+  setCurrentLocation,
 } from "@/features/favorite/favoriteSlice";
 
 export default function HomeScreen() {
@@ -24,30 +23,28 @@ export default function HomeScreen() {
   const { favoriteLocations } = useSelector(
     (state: RootState) => state.favorite,
   );
-  // defaults to London
-  const [selectedLocation, setSelectedLocation] =
-    useState<Location>(defaultLocation);
+  const { currentLocation } = useSelector((state: RootState) => state.favorite);
 
   const isFavorite = useMemo(() => {
-    return favoriteLocations?.some((loc) => loc.id === selectedLocation?.id);
-  }, [favoriteLocations, selectedLocation]);
+    return favoriteLocations?.some((loc) => loc.id === currentLocation?.id);
+  }, [favoriteLocations, currentLocation]);
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const { data: weatherData } = useFetchLocationDetail(selectedLocation?.id, {
-    enabled: !!selectedLocation?.id,
+  const { data: weatherData } = useFetchLocationDetail(currentLocation?.id, {
+    enabled: !!currentLocation?.id,
   });
 
   const onLocationSelect = async (location: any) => {
-    setSelectedLocation(location);
+    dispatch(setCurrentLocation(location));
   };
 
   const toggleFavorite = async () => {
     if (isFavorite) {
-      dispatch(removeFavorite(selectedLocation));
+      dispatch(removeFavorite(currentLocation));
     } else {
       dispatch(
-        addFavorite({ id: selectedLocation.id, name: selectedLocation.name }),
+        addFavorite({ id: currentLocation.id, name: currentLocation.name }),
       );
     }
   };
