@@ -53,6 +53,7 @@ const LocationSelector = ({ control, inputValue }: LocationSelectorProps) => {
               lightColor="#ffffff"
               style={styles.input}
               placeholder="Search for location"
+              autoFocus
             />
           )}
           name="searchText"

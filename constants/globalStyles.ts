@@ -13,6 +13,9 @@ const globalStyles = StyleSheet.create({
   alignCenter: {
     alignItems: "center",
   },
+  justifySpaceBetween: {
+    justifyContent: "space-between",
+  },
   mt0: {
     marginTop: 0,
   },
