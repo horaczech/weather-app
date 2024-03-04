@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "@/components/Themed";
 import WeatherTable from "@/components/home/WeatherTable";
 import globalStyles from "@/constants/globalStyles";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SelectLocationModal from "@/components/home/SelectLocationModal";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFetchLocationDetail } from "@/api/weather";
@@ -11,17 +11,28 @@ import { Location } from "@/types/api";
 import { defaultLocation } from "@/constants/data";
 import Pressable from "@/components/Pressable";
 
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/store";
 import {
-  deleteFavoriteLocation,
-  saveFavoriteLocation,
-} from "@/utils/asyncStorage";
+  addFavorite,
+  initFavorite,
+  removeFavorite,
+} from "@/features/favorite/favoriteSlice";
 
 export default function HomeScreen() {
   const [openResultsModal, setOpenResultsModal] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { favoriteLocations } = useSelector(
+    (state: RootState) => state.favorite,
+  );
   // defaults to London
   const [selectedLocation, setSelectedLocation] =
     useState<Location>(defaultLocation);
+
+  const isFavorite = useMemo(() => {
+    return favoriteLocations?.some((loc) => loc.id === selectedLocation?.id);
+  }, [favoriteLocations, selectedLocation]);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const { data: weatherData } = useFetchLocationDetail(selectedLocation?.id, {
     enabled: !!selectedLocation?.id,
@@ -33,13 +44,17 @@ export default function HomeScreen() {
 
   const toggleFavorite = async () => {
     if (isFavorite) {
-      setIsFavorite(false);
-      await deleteFavoriteLocation(selectedLocation);
+      dispatch(removeFavorite(selectedLocation));
     } else {
-      setIsFavorite(true);
-      await saveFavoriteLocation(selectedLocation);
+      dispatch(
+        addFavorite({ id: selectedLocation.id, name: selectedLocation.name }),
+      );
     }
   };
+
+  useEffect(() => {
+    dispatch(initFavorite());
+  }, []);
 
   return (
     <BottomSheetModalProvider>
