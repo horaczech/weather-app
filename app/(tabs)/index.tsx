@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, useColorScheme, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "@/components/Themed";
 import WeatherTable from "@/components/home/WeatherTable";
 import globalStyles from "@/constants/globalStyles";
@@ -10,16 +10,18 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { Location } from "@/types/api";
 import { defaultLocation } from "@/constants/data";
 import Pressable from "@/components/Pressable";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import {
+  deleteFavoriteLocation,
+  saveFavoriteLocation,
+} from "@/utils/asyncStorage";
 
 export default function HomeScreen() {
   const [openResultsModal, setOpenResultsModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const theme = useColorScheme();
   // defaults to London
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    defaultLocation,
-  );
+  const [selectedLocation, setSelectedLocation] =
+    useState<Location>(defaultLocation);
 
   const { data: weatherData } = useFetchLocationDetail(selectedLocation?.id, {
     enabled: !!selectedLocation?.id,
@@ -27,45 +29,15 @@ export default function HomeScreen() {
 
   const onLocationSelect = async (location: any) => {
     setSelectedLocation(location);
-    try {
-      const favoriteLocations =
-        await AsyncStorage.getItem("@favoriteLocations");
-      const parsedLocations = JSON.parse(favoriteLocations || "[]");
-      if (parsedLocations.some(location?.id)) {
-        setIsFavorite(true);
-      } else {
-        setIsFavorite(false);
-      }
-    } catch {
-      //
-    }
   };
 
   const toggleFavorite = async () => {
-    try {
-      const favoriteLocations =
-        await AsyncStorage.getItem("@favoriteLocations");
-      const parsedLocations = JSON.parse(favoriteLocations || "[]");
-
-      if (parsedLocations.includes(selectedLocation?.id)) {
-        const newLocations = [...parsedLocations].filter((locationId: any) => {
-          return locationId !== selectedLocation?.id;
-        });
-
-        await AsyncStorage.setItem(
-          "@favoriteLocations",
-          JSON.stringify(newLocations),
-        );
-        setIsFavorite(false);
-      } else {
-        await AsyncStorage.setItem(
-          "@favoriteLocations",
-          JSON.stringify([...parsedLocations, selectedLocation?.id]),
-        );
-        setIsFavorite(true);
-      }
-    } catch (e) {
-      //
+    if (isFavorite) {
+      setIsFavorite(false);
+      await deleteFavoriteLocation(selectedLocation);
+    } else {
+      setIsFavorite(true);
+      await saveFavoriteLocation(selectedLocation);
     }
   };
 
@@ -86,26 +58,18 @@ export default function HomeScreen() {
           <Pressable style={styles.favoriteButton} onPress={toggleFavorite}>
             <Ionicons
               name={isFavorite ? "star" : "star-outline"}
-              color={theme === "dark" ? "#c9600f" : "#000000"}
+              color="#c9600f"
               size={28}
             />
           </Pressable>
           <Text style={styles.currentLocationText} numberOfLines={1}>
             {weatherData?.name}
-            {weatherData?.name}
           </Text>
           <Pressable
-            style={[
-              styles.changeLocationButton,
-              { backgroundColor: theme === "light" ? "#FFFFFF" : "#07126e" },
-            ]}
+            style={styles.changeLocationButton}
             onPress={() => setOpenResultsModal(true)}
           >
-            <Feather
-              name="edit"
-              size={18}
-              color={theme === "dark" ? "#FFFFFF" : "#000000"}
-            />
+            <Feather name="edit" size={18} color="#FFFFFF" />
           </Pressable>
         </View>
         <WeatherTable location={weatherData} />
@@ -147,6 +111,7 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 10,
     marginRight: 20,
+    backgroundColor: "#07126e",
   },
   currentLocationText: {
     fontSize: 20,
