@@ -2,11 +2,11 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "@/components/Themed";
 import WeatherTable from "@/components/home/WeatherTable";
 import globalStyles from "@/constants/globalStyles";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import SelectLocationModal from "@/components/home/SelectLocationModal";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFetchLocationDetail } from "@/api/weather";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import Pressable from "@/components/Pressable";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -16,16 +16,18 @@ import {
   initFavorite,
   removeFavorite,
   setCurrentLocation,
+  setShowSelectLocationModal,
 } from "@/features/favorite/favoriteSlice";
 import { blueColor } from "@/constants/Colors";
+import Octicons from "@expo/vector-icons/Octicons";
 
 export default function HomeScreen() {
-  const [openResultsModal, setOpenResultsModal] = useState(false);
   const { favoriteLocations } = useSelector(
     (state: RootState) => state.favorite,
   );
-  const { currentLocation } = useSelector((state: RootState) => state.favorite);
-
+  const { currentLocation, showSelectLocationModal } = useSelector(
+    (state: RootState) => state.favorite,
+  );
   const isFavorite = useMemo(() => {
     return favoriteLocations?.some((loc) => loc.id === currentLocation?.id);
   }, [favoriteLocations, currentLocation]);
@@ -69,8 +71,8 @@ export default function HomeScreen() {
           ]}
         >
           <Pressable style={styles.favoriteButton} onPress={toggleFavorite}>
-            <Ionicons
-              name={isFavorite ? "star" : "star-outline"}
+            <Octicons
+              name={isFavorite ? "star-fill" : "star"}
               color="#c9600f"
               size={28}
             />
@@ -80,7 +82,7 @@ export default function HomeScreen() {
           </Text>
           <Pressable
             style={styles.changeLocationButton}
-            onPress={() => setOpenResultsModal(true)}
+            onPress={() => dispatch(setShowSelectLocationModal(true))}
           >
             <Feather name="edit" size={18} color="#FFFFFF" />
           </Pressable>
@@ -88,8 +90,8 @@ export default function HomeScreen() {
         <WeatherTable location={weatherData} />
       </ScrollView>
       <SelectLocationModal
-        isOpen={openResultsModal}
-        onClose={() => setOpenResultsModal(false)}
+        isOpen={showSelectLocationModal}
+        onClose={() => dispatch(setShowSelectLocationModal(false))}
         selectLocation={onLocationSelect}
       />
     </BottomSheetModalProvider>

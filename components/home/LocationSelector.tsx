@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 
 interface LocationSelectorProps {
@@ -22,9 +23,15 @@ const LocationSelector = ({ control, inputValue }: LocationSelectorProps) => {
 
   const scaleHandler = (show: boolean) => {
     "worklet";
-    scaleAnimation.value = withSpring(show ? 1 : 0, {
-      duration: 250,
-    });
+    if (show) {
+      scaleAnimation.value = withSpring(1, {
+        duration: 250,
+      });
+    } else {
+      scaleAnimation.value = withTiming(0, {
+        duration: 250,
+      });
+    }
   };
 
   useEffect(() => {

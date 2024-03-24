@@ -11,12 +11,14 @@ import { defaultLocation } from "@/constants/data";
 export interface FavoriteState {
   favoriteLocations: FavoriteLocation[];
   currentLocation: Pick<Location, "id" | "name">;
+  showSelectLocationModal: boolean;
 }
 
 const initialState: FavoriteState = {
   favoriteLocations: [],
   // defaults to London
   currentLocation: defaultLocation,
+  showSelectLocationModal: false,
 };
 
 export const initFavorite = createAsyncThunk(
@@ -54,6 +56,12 @@ export const favoriteSlice = createSlice({
         state.currentLocation = action.payload;
       }
     },
+    setShowSelectLocationModal: (
+      state,
+      action: PayloadAction<FavoriteState["showSelectLocationModal"]>,
+    ) => {
+      state.showSelectLocationModal = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -84,6 +92,7 @@ export const favoriteSlice = createSlice({
   },
 });
 
-export const { setCurrentLocation } = favoriteSlice.actions;
+export const { setCurrentLocation, setShowSelectLocationModal } =
+  favoriteSlice.actions;
 
 export default favoriteSlice.reducer;

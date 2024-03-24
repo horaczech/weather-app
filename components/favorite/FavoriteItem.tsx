@@ -2,7 +2,7 @@ import { StyleSheet, useColorScheme, View } from "react-native";
 import { FavoriteLocation } from "@/types/asyncStorage";
 import { Text } from "@/components/Themed";
 import Pressable from "@/components/Pressable";
-import { Ionicons } from "@expo/vector-icons";
+import Octicons from "@expo/vector-icons/Octicons";
 
 interface FavoriteItemProps {
   item: FavoriteLocation;
@@ -23,7 +23,7 @@ const FavoriteItem = ({ item, onRemove, onSelect }: FavoriteItemProps) => {
         <Text>{item.name}</Text>
       </Pressable>
       <Pressable onPress={onRemove} style={styles.starContainer}>
-        <Ionicons name="star" color="#c9600f" size={20} />
+        <Octicons name="star-fill" color="#c9600f" size={20} />
       </Pressable>
     </View>
   );
