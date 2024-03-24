@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "@/components/Themed";
 import WeatherTable from "@/components/home/WeatherTable";
 import globalStyles from "@/constants/globalStyles";
@@ -34,7 +34,11 @@ export default function HomeScreen() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const { data: weatherData } = useFetchLocationDetail(currentLocation?.id, {
+  const {
+    data: weatherData,
+    isFetching,
+    refetch,
+  } = useFetchLocationDetail(currentLocation?.id, {
     enabled: !!currentLocation?.id,
   });
 
@@ -61,6 +65,9 @@ export default function HomeScreen() {
       <ScrollView
         style={globalStyles.f1}
         contentContainerStyle={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={() => refetch()} />
+        }
       >
         <View
           style={[

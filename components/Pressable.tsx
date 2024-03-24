@@ -1,8 +1,10 @@
 import {
   Pressable as DefaultPressable,
   PressableProps as DefaultPressableProps,
+  View,
   ViewProps,
 } from "react-native";
+import { forwardRef } from "react";
 
 interface PressableProps
   extends Omit<DefaultPressableProps, "style">,
@@ -10,20 +12,19 @@ interface PressableProps
   pressedOpacity?: number;
 }
 
-const Pressable = ({
-  style,
-  pressedOpacity,
-  ...otherProps
-}: PressableProps) => {
-  return (
-    <DefaultPressable
-      style={({ pressed }) => [
-        { opacity: pressed ? pressedOpacity ?? 0.65 : 1 },
-        style,
-      ]}
-      {...otherProps}
-    />
-  );
-};
+const Pressable1 = forwardRef<View, PressableProps>(
+  ({ style, pressedOpacity, ...otherProps }, ref) => {
+    return (
+      <DefaultPressable
+        ref={ref}
+        style={({ pressed }) => [
+          { opacity: pressed ? pressedOpacity ?? 0.65 : 1 },
+          style,
+        ]}
+        {...otherProps}
+      />
+    );
+  },
+);
 
-export default Pressable;
+export default Pressable1;
