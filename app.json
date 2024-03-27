@@ -17,7 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.horacekpetr.weatherapp"
+      "bundleIdentifier": "com.horacekpetr.weatherforecast"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,7 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
-      "package": "com.horacekpetr.weatherapp"
+      "package": "com.horacekpetr.weatherforecast"
     },
     "plugins": [
       "expo-router",
