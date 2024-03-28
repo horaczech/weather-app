@@ -16,6 +16,7 @@ import DragList, { DragListRenderItemInfo } from "react-native-draglist";
 import globalStyles from "@/constants/globalStyles";
 import { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
 
 // TODO: fix drag position for iOS
 export default function FavoriteScreen() {
@@ -56,7 +57,10 @@ export default function FavoriteScreen() {
           item={item}
           onRemove={() => dispatch(removeFavorite(item))}
           onSelect={() => selectHandler(item)}
-          onPressIn={onDragStart}
+          onPressIn={() => {
+            onDragStart();
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          }}
           onPressOut={onDragEnd}
           isDragging={isActive}
         />
