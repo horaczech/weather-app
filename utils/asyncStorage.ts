@@ -57,3 +57,9 @@ export const deleteFavoriteLocation = async (location: FavoriteLocation) => {
     await setItem(AsyncStorageKeys.Favorites, newLocations);
   }
 };
+
+export const saveBulkFavoriteLocations = async (
+  locations: FavoriteLocation[],
+) => {
+  await setItem(AsyncStorageKeys.Favorites, locations);
+};

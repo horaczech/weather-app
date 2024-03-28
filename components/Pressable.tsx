@@ -6,7 +6,7 @@ import {
 } from "react-native";
 import { forwardRef } from "react";
 
-interface PressableProps
+export interface PressableProps
   extends Omit<DefaultPressableProps, "style">,
     Pick<ViewProps, "style"> {
   pressedOpacity?: number;

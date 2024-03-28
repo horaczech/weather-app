@@ -3,6 +3,7 @@ import { FavoriteLocation } from "@/types/asyncStorage";
 import {
   deleteFavoriteLocation,
   getFavoriteLocations,
+  saveBulkFavoriteLocations,
   saveFavoriteLocation,
 } from "@/utils/asyncStorage";
 import { Location } from "@/types/api";
@@ -41,6 +42,14 @@ export const addFavorite = createAsyncThunk(
   async (location: FavoriteLocation) => {
     await saveFavoriteLocation(location);
     return location;
+  },
+);
+
+export const reorderFavorites = createAsyncThunk(
+  "favorite/reorderFavorites",
+  async (newLocations: FavoriteLocation[]) => {
+    await saveBulkFavoriteLocations(newLocations);
+    return newLocations;
   },
 );
 
@@ -88,6 +97,9 @@ export const favoriteSlice = createSlice({
           newLocations.splice(indexToRemove, 1);
         }
         state.favoriteLocations = newLocations;
+      })
+      .addCase(reorderFavorites.fulfilled, (state, action) => {
+        state.favoriteLocations = action.payload;
       });
   },
 });
