@@ -1,6 +1,5 @@
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "@/components/Themed";
-import WeatherTable from "@/components/home/WeatherTable";
 import globalStyles from "@/constants/globalStyles";
 import { useEffect, useMemo } from "react";
 import SelectLocationModal from "@/components/home/SelectLocationModal";
@@ -20,6 +19,7 @@ import {
 } from "@/features/favorite/favoriteSlice";
 import { blueColor } from "@/constants/Colors";
 import Octicons from "@expo/vector-icons/Octicons";
+import HomeContent from "@/components/home/Content";
 
 export default function HomeScreen() {
   const { favoriteLocations } = useSelector(
@@ -94,7 +94,7 @@ export default function HomeScreen() {
             <Feather name="edit" size={18} color="#FFFFFF" />
           </Pressable>
         </View>
-        <WeatherTable location={weatherData} />
+        <HomeContent location={weatherData} />
       </ScrollView>
       <SelectLocationModal
         isOpen={showSelectLocationModal}

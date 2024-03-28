@@ -4,19 +4,23 @@ import {
   StyleSheet,
   ActivityIndicator,
   useColorScheme,
+  Dimensions,
 } from "react-native";
 import { Text } from "@/components/Themed";
 import { CurrentHour, LocationDetail } from "@/types/api";
 import { useFetchDynamicUrl } from "@/api/weather";
 import globalStyles from "@/constants/globalStyles";
 import { Ionicons } from "@expo/vector-icons";
+import Pressable from "@/components/Pressable";
+import Octicons from "@expo/vector-icons/Octicons";
+import Colors from "@/constants/Colors";
 
 interface WeatherTableProps {
   location: LocationDetail | undefined;
-  isLoading?: boolean;
+  onNextSlide: () => void;
 }
 
-const WeatherTable = ({ location, isLoading }: WeatherTableProps) => {
+const WeatherTable = ({ location, onNextSlide }: WeatherTableProps) => {
   const {
     data: currenthourData,
     isLoading: currenthourIsLoading,
@@ -24,31 +28,12 @@ const WeatherTable = ({ location, isLoading }: WeatherTableProps) => {
   } = useFetchDynamicUrl<CurrentHour>(location?._links?.currenthour?.href, {
     enabled: !!location?._links?.currenthour?.href,
   });
-  const {
-    data: forecastData,
-    isLoading: forecastIsLoading,
-    isFetching: forecastIsFetching,
-  } = useFetchDynamicUrl(location?._links?.forecast?.href, {
-    enabled: !!location?._links?.forecast?.href,
-  });
 
   const theme = useColorScheme();
 
   const isSomeLoading = useMemo(() => {
-    return (
-      isLoading ||
-      currenthourIsLoading ||
-      currenthourIsFetching ||
-      forecastIsLoading ||
-      forecastIsFetching
-    );
-  }, [
-    isLoading,
-    currenthourIsLoading,
-    currenthourIsFetching,
-    forecastIsLoading,
-    forecastIsFetching,
-  ]);
+    return currenthourIsLoading || currenthourIsFetching;
+  }, [currenthourIsLoading, currenthourIsFetching]);
 
   if (!location) {
     return null;
@@ -102,16 +87,30 @@ const WeatherTable = ({ location, isLoading }: WeatherTableProps) => {
           </Text>
         </View>
       )}
+      <Pressable
+        style={[
+          styles.nextSlide,
+          {
+            backgroundColor:
+              theme === "light"
+                ? `rgba(20, 20, 20, 0.3)`
+                : `rgba(255, 255, 255, 0.1)`,
+          },
+        ]}
+        onPress={onNextSlide}
+      >
+        <Octicons name="chevron-right" color={Colors.dark.text} size={26} />
+      </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
-    width: "75%",
+    paddingHorizontal: Dimensions.get("window").width * 0.125,
+    width: Dimensions.get("window").width,
   },
   wind: {
     marginTop: 30,
@@ -128,6 +127,17 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     marginTop: 20,
+  },
+  nextSlide: {
+    position: "absolute",
+    right: 0,
+    top: 100,
+    height: 100,
+    justifyContent: "center",
+    padding: 10,
+    paddingRight: 12,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
   },
 });
 

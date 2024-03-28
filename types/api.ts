@@ -194,3 +194,40 @@ export type CurrentHour = {
 };
 
 export type CurrentHourRes = AxiosResponse<CurrentHour>["data"];
+
+export type Forecast = {
+  created: string;
+  update: string;
+  uv: {
+    duration: {
+      days: number;
+      hours: number;
+    };
+    url: string;
+    displayUrl: string;
+  };
+  dayIntervals: {
+    start: string;
+    end: string;
+    twentyFourHourSymbol: string;
+    twelveHourSymbols: (string | null)[];
+    sixHourSymbols: (string | null)[];
+    precipitation: {
+      value: number;
+    };
+    temperature: {
+      value: number;
+      min: number;
+      max: number;
+    };
+    wind: {
+      min: number;
+      max: number;
+    };
+  }[];
+  _links: {
+    self: {
+      href: string;
+    };
+  };
+};
